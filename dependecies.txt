@@ -223,6 +223,21 @@ requirements.txt:
 
 Flask==2.3.3
 Werkzeug==2.3.3
+
+- *GET all items*:
+    bash
+    curl http://localhost:5000/items
+    
+
+- *GET a single item*:
+    bash
+    curl http://localhost:5000/items/1
+    
+
+- *POST a new item*:
+    bash
+    curl -X POST -H "Content-Type: application/json" -d '{"id": 3, "name": "Item 3"}' http://localhost:5000/items
+    
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Q5 VERSION CONTROL
