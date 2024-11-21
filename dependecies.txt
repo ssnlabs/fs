@@ -165,8 +165,6 @@ deepsh0203 is Dockerhub username, create one for u
 myapp-repo name
 app-image name
 
-
-
 app.py :
 
 from flask import Flask
@@ -183,64 +181,41 @@ if __name__ == "__main__":
 
 
 CODE2 app.py (GET METHOD): 
-
-from flask import Flask,jsonify
+python
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-students = [
-    {"id":1,"name":"Dennis","age":20,"Major":"Computer Science"},
-    {"id": 2, "name": "Harish", "age": 20, "major": "Mathematics"},
-    {"id": 3, "name": "Badri", "age": 20, "major": "Machine Learning"}
+# Sample data
+data = [
+    {"id": 1, "name": "Item 1"},
+    {"id": 2, "name": "Item 2"}
 ]
 
+@app.route('/items', methods=['GET'])
+def get_items():
+    return jsonify(data)
 
-@app.route("/")
-def home():
-    return "Hello World"
+@app.route('/items/<int:item_id>', methods=['GET'])
+def get_item(item_id):
+    item = next((item for item in data if item["id"] == item_id), None)
+    return jsonify(item) if item else ("Item not found", 404)
 
-@app.route("/students",methods=["GET"])
-def getStudents():
-    return jsonify(students)
+@app.route('/items', methods=['POST'])
+def create_item():
+    new_item = request.get_json()
+    data.append(new_item)
+    return jsonify(new_item), 201
 
-@app.route("/students/<int:studentId>",methods=["GET"])
-def getStudent(studentId):
-    student=None
-    for i in students:
-        if i["id"]==studentId:
-            student=i
-            break
-    if student!=None:
-        return jsonify(student)
-    else:
-        return jsonify({"error":"Student not found"}),404
-
-
-if __name__=='__main__':
-    app.run("0.0.0.0",5000)
-
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
 
 Dockerfile:
-
-# Use the official Python image
-FROM python:3.9
-
-# Set the working directory in the container
+FROM python:3.9-slim
 WORKDIR /app
-
-# Copy the current directory contents into the container
 COPY . /app
-
-# Install any needed packages specified in requirements.txt
-RUN pip install -r requirements.txt
-
-# Make port 5000 available to the world outside this container
+RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5000
-
-# Define environment variable
-ENV NAME=FlaskApp
-
-# Run app.py when the container launches
 CMD ["python", "app.py"]
 
 
