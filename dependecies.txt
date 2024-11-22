@@ -107,7 +107,7 @@ whoami ---> username
 #Q3 SSH REMOTE-LOCAL CONNECTION
 
 
-ssh-keygen -t rsa -b 2048
+ssh-keygen
 ssh-copy-id username@ip
 ssh username@ip
 --create a test.sh in remote system
